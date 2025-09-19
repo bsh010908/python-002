@@ -1,6 +1,6 @@
 import os
 
-DATA_FILE = "isam_data.dat"
+DATA_FILE = "C:\edumgt-java-education\java-education-007\isam_data.dat"
 INDEX_FILE = "isam_index.dat"
 RECORD_SIZE = 80  # ID + 항구명 고정 길이 (UTF-8)
 
