@@ -7,6 +7,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    "jazzmin",  # 반드시 admin 전에
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
