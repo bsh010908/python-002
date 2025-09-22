@@ -2,19 +2,31 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-tp2t7kmexvwk!9&yk43$ui-w=tc3*nw@m_s(0@6jf8+pzt1fq('
+SECRET_KEY = "django-insecure-tp2t7kmexvwk!9&yk43$ui-w=tc3*nw@m_s(0@6jf8+pzt1fq("
 DEBUG = True
 ALLOWED_HOSTS = []
 
+# ======================
+# Application definition
+# ======================
 INSTALLED_APPS = [
-    "jazzmin",  # 반드시 admin 전에
+    # 🎨 Jazzmin 테마 (Admin UI 개선)
+    "jazzmin",
+
+    # Django 기본 앱들 (Jazzmin이 admin 확장하므로 반드시 필요)
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "myapp",   # ✅ 앱 추가
+
+    # MongoEngine + Admin
+    "django_mongoengine",
+    "django_mongoengine.mongo_admin",
+
+    # 🚢 도메인 앱 (User, Ships, Ports 등)
+    "myapp",
 ]
 
 MIDDLEWARE = [
@@ -47,21 +59,27 @@ TEMPLATES = [
 WSGI_APPLICATION = "myproject.wsgi.application"
 
 # ======================
-# ✅ MongoDB 데이터베이스 설정 (Djongo)
+# ✅ MongoDB 연결 설정 (django-mongoengine 방식)
 # ======================
-DATABASES = {
+MONGODB_DATABASES = {
     "default": {
-        "ENGINE": "djongo",
-        "NAME": "testdb",   # MongoDB database 이름
-        "ENFORCE_SCHEMA": False,
-        "CLIENT": {
-            "host": "mongodb://localhost:27017/testdb",  # MongoDB 연결 URI
-        },
+        "name": "testdb",
+        "host": "localhost",
+        "port": 27017,
+        # "username": "user",  # 필요 시 추가
+        # "password": "pass",
     }
 }
 
 # ======================
-# 비밀번호 검증
+# ✅ 인증/세션을 MongoDB에 저장
+# ======================
+SESSION_ENGINE = "django_mongoengine.sessions"
+SESSION_SERIALIZER = "django_mongoengine.sessions.BSONSerializer"
+AUTH_USER_MODEL = "myapp.User"  # 🚨 반드시 커스텀 User 모델 구현 필요
+
+# ======================
+# Password validation
 # ======================
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -71,7 +89,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # ======================
-# 국제화 / 타임존
+# Internationalization
 # ======================
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -79,8 +97,7 @@ USE_I18N = True
 USE_TZ = True
 
 # ======================
-# 정적 파일
+# Static files
 # ======================
 STATIC_URL = "static/"
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
